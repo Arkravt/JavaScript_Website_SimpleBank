@@ -6,9 +6,10 @@
 const modalWindow = document.querySelector('.modal-window');
 const overlay = document.querySelector('.overlay');
 const btnCloseModalWindow = document.querySelector('.btn--close-modal-window');
-const btnsOpenModalWindow = document.querySelectorAll(
-  '.btn--show-modal-window'
-);
+const btnsOpenModalWindow = document.querySelectorAll('.btn--show-modal-window');
+const scrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+const navLinks = document.querySelector('.nav__links');
 
 const openModalWindow = function (e) {
   e.preventDefault();
@@ -31,3 +32,50 @@ document.addEventListener('keydown', function (e) {
     closeModalWindow();
   }
 });
+
+
+///////////////////////////////////////
+// Scroll
+/*
+Любая точка на странице имеет координаты:
+Относительно окна браузера – elem.getBoundingClientRect().
+Относительно документа – elem.getBoundingClientRect() плюс текущая прокрутка страницы.
+*/
+scrollTo.addEventListener('click', function () {
+
+  const section1Coords = section1.getBoundingClientRect();
+
+  //Старый метод. Работает во всех браузерах.
+  window.scrollTo({
+    left: section1Coords.left + window.pageXOffset,
+    top: section1Coords.top + window.pageYOffset,
+    behavior: "smooth"
+  });
+
+  //Новый метод. Работает только в новых браузерах.
+  // section1.scrollIntoView(
+  //   {
+  //     behavior: "smooth"
+  //   });
+});
+
+///////////////////////////////////////
+// Smooth page navigation
+
+navLinks.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  if (e.target.classList.contains('nav__link')) {
+
+    const href = e.target.getAttribute('href');
+
+    document.querySelector(href).scrollIntoView(
+      { behavior: 'smooth' }
+    );
+
+  }
+
+});
+
+
+
