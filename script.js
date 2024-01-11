@@ -42,16 +42,13 @@ document.addEventListener('keydown', function (e) {
 Относительно документа – elem.getBoundingClientRect() плюс текущая прокрутка страницы.
 */
 scrollTo.addEventListener('click', function () {
-
   const section1Coords = section1.getBoundingClientRect();
-
   //Старый метод. Работает во всех браузерах.
   window.scrollTo({
     left: section1Coords.left + window.pageXOffset,
     top: section1Coords.top + window.pageYOffset,
     behavior: "smooth"
   });
-
   //Новый метод. Работает только в новых браузерах.
   // section1.scrollIntoView(
   //   {
@@ -59,23 +56,37 @@ scrollTo.addEventListener('click', function () {
   //   });
 });
 
+
 ///////////////////////////////////////
 // Smooth page navigation
-
 navLinks.addEventListener('click', (e) => {
   e.preventDefault();
-
   if (e.target.classList.contains('nav__link')) {
-
     const href = e.target.getAttribute('href');
-
     document.querySelector(href).scrollIntoView(
       { behavior: 'smooth' }
     );
-
   }
-
 });
 
 
+///////////////////////////////////////
+// Создание Вкладки
+const tabContainer = document.querySelector('.operations__tab-container');
+const tabs = document.querySelectorAll('.operations__tab');
+const operationsContent = document.querySelectorAll('.operations__content');
 
+tabContainer.addEventListener('click', (e) => {
+  const clickedTab = e.target.closest('.operations__tab');
+
+  if (!clickedTab) return;
+
+  tabs.forEach(tab => tab.classList.remove('operations__tab--active'));
+  clickedTab.classList.add('operations__tab--active');
+
+  operationsContent.forEach(cont => cont.classList.remove('operations__content--active'));
+  document
+    .querySelector(`.operations__content--${clickedTab.dataset.tab}`)
+    .classList.add('operations__content--active');
+
+});
