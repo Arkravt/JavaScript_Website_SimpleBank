@@ -1,8 +1,5 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modalWindow = document.querySelector('.modal-window');
 const overlay = document.querySelector('.overlay');
 const btnCloseModalWindow = document.querySelector('.btn--close-modal-window');
@@ -10,7 +7,13 @@ const btnsOpenModalWindow = document.querySelectorAll('.btn--show-modal-window')
 const scrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 const navLinks = document.querySelector('.nav__links');
+const tabContainer = document.querySelector('.operations__tab-container');
+const tabs = document.querySelectorAll('.operations__tab');
+const operationsContent = document.querySelectorAll('.operations__content');
+const nav = document.querySelector('.nav');
 
+///////////////////////////////////////
+// Modal window
 const openModalWindow = function (e) {
   e.preventDefault();
   modalWindow.classList.remove('hidden');
@@ -72,10 +75,6 @@ navLinks.addEventListener('click', (e) => {
 
 ///////////////////////////////////////
 // Создание Вкладки
-const tabContainer = document.querySelector('.operations__tab-container');
-const tabs = document.querySelectorAll('.operations__tab');
-const operationsContent = document.querySelectorAll('.operations__content');
-
 tabContainer.addEventListener('click', (e) => {
   const clickedTab = e.target.closest('.operations__tab');
 
@@ -90,3 +89,33 @@ tabContainer.addEventListener('click', (e) => {
     .classList.add('operations__content--active');
 
 });
+
+
+///////////////////////////////////////
+// Анимация потускнения на панели навигации
+
+// TARGET - тот элемент на который нажали
+// CURRENTTARGET - тот элемент к которому прикреплен обработчик
+// THIS - тот элемент к которому прикреплен обработчик (this = currentTarget)
+
+const navLinksHoverAnimation = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const linkOver = e.target;
+    const links = linkOver.closest('.nav__links').querySelectorAll('.nav__link');
+    const logo = linkOver.closest('.nav').querySelector('.nav__logo');
+    const text = linkOver.closest('.nav').querySelector('.nav__text');
+
+    links.forEach(el => {
+      if (el !== linkOver) {
+        el.style.opacity = this;
+      }
+    });
+    logo.style.opacity = this;
+    text.style.opacity = this;
+  }
+};
+
+nav.addEventListener('mouseover', navLinksHoverAnimation.bind(0.4));
+nav.addEventListener('mouseout', navLinksHoverAnimation.bind(1));
+
+
