@@ -136,7 +136,7 @@ const navHeight = nav.getBoundingClientRect().height;
 const observerCallBack = function (entries, observer) {
 
   const entry = entries[0];
-  
+
   //nav.classList.toggle('sticky'); ИЛИ
   if (entry.isIntersecting) {
     nav.classList.remove('sticky');
@@ -152,5 +152,27 @@ const observerOptions = {
   rootMargin: `-${navHeight}px`
 };
 
-const observer = new IntersectionObserver(observerCallBack, observerOptions);
-observer.observe(header);
+const headerObserver = new IntersectionObserver(observerCallBack, observerOptions);
+headerObserver.observe(header);
+
+
+///////////////////////////////////////
+// Плавное появление секций сайта
+const allSections = document.querySelectorAll('.section');
+const optionsObserverHeader = {
+  root: null,
+  threshold: 0.2
+};
+const callBackObserverSections = function (entries, sectionObserver) {
+  const entry = entries[0];
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  sectionObserver.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(callBackObserverSections, optionsObserverHeader);
+
+allSections.forEach(section => {
+  section.classList.add('section--hidden');
+  sectionObserver.observe(section);
+});
