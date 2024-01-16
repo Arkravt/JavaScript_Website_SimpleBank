@@ -16,6 +16,7 @@ const lazyImages = document.querySelectorAll('img[data-src]');
 const slides = document.querySelectorAll('.slide');
 const btnSliderRight = document.querySelector('.slider__btn--right');
 const btnSliderleft = document.querySelector('.slider__btn--left');
+const dotContainer = document.querySelector('.dots');
 
 ///////////////////////////////////////
 // Modal window
@@ -213,32 +214,70 @@ lazyImages.forEach(image => observerLazyImages.observe(image));
 // const slider = document.querySelector('.slider');
 // slider.style.transform = 'scale(0.3) translateX(-1000px)';
 // slider.style.overflow = 'visible';
-
 let currentSlide = 0;
 const quantitySlides = slides.length;
 
-const moveSlide = function () {
+const moveSlide = function (currentSlide) {
   slides.forEach(
     (slide, index) => slide.style.transform = `translateX(${(index - currentSlide) * 100}%)`
   );
 };
 
-moveSlide();
-
-btnSliderRight.addEventListener('click', function () {
+const nextSlide = function () {
   currentSlide++;
-
   if (currentSlide === quantitySlides)
     currentSlide = 0;
+  moveSlide(currentSlide);
+  activateDot(currentSlide);
+};
 
-  moveSlide();
-});
-
-btnSliderleft.addEventListener('click', function () {
+const previousSlide = function () {
   currentSlide--;
-
   if (currentSlide < 0)
     currentSlide = quantitySlides - 1;
+  moveSlide(currentSlide);
+  activateDot(currentSlide);
+};
 
-  moveSlide();
+
+const createDots = function () {
+  slides.forEach((_, index) => {
+    dotContainer.insertAdjacentHTML('beforeend', `<button class="dots__dot" data-slide="${index}"></button>`);
+  });
+};
+
+const activateDot = function (slideNumber) {
+  document.querySelectorAll('.dots__dot').forEach(dot => {
+    dot.classList.remove('dots__dot--active')
+  });
+  const currentDot = document.querySelector(`.dots__dot[data-slide="${slideNumber}"]`);
+  currentDot.classList.add('dots__dot--active');
+
+};
+
+
+createDots();
+moveSlide(0);
+activateDot(0);
+
+
+btnSliderRight.addEventListener('click', nextSlide);
+
+btnSliderleft.addEventListener('click', previousSlide);
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') previousSlide();
 });
+
+
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const slideNumber = e.target.dataset.slide;
+    moveSlide(slideNumber);
+    activateDot(slideNumber);
+  }
+});
+
+
+
