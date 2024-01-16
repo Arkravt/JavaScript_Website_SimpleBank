@@ -12,6 +12,10 @@ const tabs = document.querySelectorAll('.operations__tab');
 const operationsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
 const header = document.querySelector('.header');
+const lazyImages = document.querySelectorAll('img[data-src]');
+const slides = document.querySelectorAll('.slide');
+const btnSliderRight = document.querySelector('.slider__btn--right');
+const btnSliderleft = document.querySelector('.slider__btn--left');
 
 ///////////////////////////////////////
 // Modal window
@@ -181,9 +185,6 @@ allSections.forEach(section => {
 
 ///////////////////////////////////////
 // Имплементация Lazy Loading для изображений
-
-const lazyImages = document.querySelectorAll('img[data-src]');
-
 const callBackObserverLazyImages = function (entries, observerLazyImages) {
   const entry = entries[0];
 
@@ -191,17 +192,53 @@ const callBackObserverLazyImages = function (entries, observerLazyImages) {
 
   entry.target.src = entry.target.dataset.src;
 
-  entry.target.addEventListener('load', function() {
+  entry.target.addEventListener('load', function () {
     entry.target.classList.remove('lazy-img');
   });
   observerLazyImages.unobserve(entry.target);
 };
 
 const observerLazyImagesOptions = {
-  root: null, 
+  root: null,
   threshold: 0.7,
   rootMargin: '200px'
 };
 
 const observerLazyImages = new IntersectionObserver(callBackObserverLazyImages, observerLazyImagesOptions);
 lazyImages.forEach(image => observerLazyImages.observe(image));
+
+
+///////////////////////////////////////
+// Создание слайдера
+// const slider = document.querySelector('.slider');
+// slider.style.transform = 'scale(0.3) translateX(-1000px)';
+// slider.style.overflow = 'visible';
+
+let currentSlide = 0;
+const quantitySlides = slides.length;
+
+const moveSlide = function () {
+  slides.forEach(
+    (slide, index) => slide.style.transform = `translateX(${(index - currentSlide) * 100}%)`
+  );
+};
+
+moveSlide();
+
+btnSliderRight.addEventListener('click', function () {
+  currentSlide++;
+
+  if (currentSlide === quantitySlides)
+    currentSlide = 0;
+
+  moveSlide();
+});
+
+btnSliderleft.addEventListener('click', function () {
+  currentSlide--;
+
+  if (currentSlide < 0)
+    currentSlide = quantitySlides - 1;
+
+  moveSlide();
+});
